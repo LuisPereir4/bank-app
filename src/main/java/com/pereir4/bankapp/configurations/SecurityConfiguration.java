@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
@@ -27,7 +27,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .httpBasic();
     }
 
-    // Ignoring security in memory db management endpoints
+    // Ignoring security in memory database management endpoints
     @Override
     public void configure(WebSecurity web) {
         web
@@ -35,17 +35,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/h2-console/**");
     }
 
-    // Providing mandatory password encoder bean
+    // Providing and choosing BCrypt as password encoder
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 
-    /* Configuring Jdbc as user details service
+    // region Useful methods
+
+    /* Configuring Jdbc as user details service (We are using a custom one)
     @Bean
     public UserDetailsService userDetailsService(DataSource dataSource) {
         return new JdbcUserDetailsManager(dataSource);
-    } */
+    }
 
     /* Creating users in memory - Should not be used on Production, only local development
     @Override
@@ -59,5 +61,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         auth.userDetailsService(userDetailsService);
     } */
+
+    // endregion
 
 }

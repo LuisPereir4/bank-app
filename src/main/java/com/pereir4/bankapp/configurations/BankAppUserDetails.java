@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-// Custom user details class
+// This is a custom user details service
 @Service
 @AllArgsConstructor
 public class BankAppUserDetails implements UserDetailsService {
